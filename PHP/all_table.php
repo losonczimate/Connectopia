@@ -1,6 +1,6 @@
 <html>
 <head>
-    <link rel=stylesheet type="text/css" href="connectopia.css" />
+    <link rel=stylesheet type="text/css" href="../CSS/connectopia.css" />
 </head>
 <body>
 <?php
