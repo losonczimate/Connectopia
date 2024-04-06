@@ -1,0 +1,197 @@
+html, body {
+    height: 100%;
+    min-height: 100%;
+}
+
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Az egérrel való görgetés csúszkájának stílusa */
+::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.2);
+    border-radius: 10px;
+}
+
+/* Az egérrel való görgetés csúszkájának pozíciója */
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.5);
+}
+
+/* Az egérrel való görgetés csúszkájának pozíciója */
+::-webkit-scrollbar-thumb:active {
+    background: rgba(255,255,255,0.8);
+}
+
+/* Az egérrel való görgetés csúszkájának pozíciója */
+::-webkit-scrollbar-track {
+    background: #55608f;
+    border-radius: 10px;
+}
+h2 {
+    text-align: center;
+    color: #fff;
+    margin-top: 3em;
+    margin-bottom: 0;
+}
+
+body {
+    margin: 0;
+    background: linear-gradient(45deg, #49a09d, #5f2c82);
+    font-family: sans-serif;
+    font-weight: 100;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.container {
+    width: 100%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    max-height: 100%;
+    overflow-y: auto;
+    padding-top: 3vh;
+    padding-bottom: 3vh;
+    box-sizing: border-box;
+}
+table {
+    margin: 0 auto;
+    width: 800px;
+    border-collapse: collapse;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+th, td {
+    padding: 15px;
+    background-color: rgba(255,255,255,0.2);
+    color: #fff;
+}
+th {
+    text-align: left;
+}
+thead th {
+    background-color: #55608f;
+}
+tbody tr:hover {
+    background-color: rgba(0,0,0,0.3);
+}
+tbody td {
+    position: relative;
+}
+tbody td:hover:before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -9999px;
+    bottom: -9999px;
+    background-color: rgba(0,0,0,0.2);
+    z-index: -1;
+}
+
+h1 {
+    text-align: center;
+    color: #fff;
+}
+
+form {
+    margin: 0 auto;
+    width: 500px;
+    background-color: rgba(255, 255, 255, 0.2);
+    padding: 20px;
+    border-radius: 10px;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="password"],
+form input[type="date"] {
+    display: block;
+    margin: 20px auto;
+    width: 100%;
+    border-radius: 5px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 10px;
+    color: #000;
+    font-size: 16px;
+}
+
+form input[type="submit"],
+form input[type="button"]{
+    display: block;
+    margin: 20px auto;
+    width: 100%;
+    border-radius: 5px;
+    border: none;
+    background-color: #55608f;
+    padding: 10px;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+#gomb{
+    width: 50px;
+    background-color: #55608f;
+    border: none;
+    color: white;
+    padding: 0px 0px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+#gomb input {
+    width: 100%;
+    height: 100%;
+}
+
+form input[type="submit"]:hover,
+form input[type="button"]:hover{
+    background-color: #7f8ca3;
+}
+img {
+    max-width: 100px;
+}
+
+.post {
+    margin-top: 20px;
+    margin: 20px auto;
+    width: 60%;
+    background-color: #55608f;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 2px 2px 5px #ccc;
+}
+
+.postfejlec {
+    background-color: #55608f;
+    padding: 10px;
+    font-weight: bold;
+    border-bottom: 1px solid #ccc;
+}
+
+.postleiras {
+    padding: 10px;
+    font-size: 16px;
+}
+
+.kep img {
+    max-width: 50%;
+    height: auto;
+    display: block;
+    margin: 10px auto;
+}
+
+.galery img {
+    max-width: initial;
+    height: auto;
+    width: 235px;
+    margin: auto;
+}
