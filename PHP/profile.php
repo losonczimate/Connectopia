@@ -77,7 +77,7 @@ while ($row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
     echo '<div class="post">';
     echo '<div class="postfejlec">' . $row["BEJEGYZES_IDOPONT"] . "  " . $row["FELH_NEV"] . '</div>';
     echo '<div class="postleiras"> Leírás: ' . $row["BEJEGYZES_LEIRAS"] . '</div>';
-    echo '<div class="kep"><img src = ' . $row["URL"] . ' ></div>';
+    echo '<div class="kep"><img src = ' . $row["KEP_URL"] . ' ></div>';
 
     echo "<td><form action='profile.php' method='post'>
              <input type='hidden' name='posztid' value='$row[ID]'/>
