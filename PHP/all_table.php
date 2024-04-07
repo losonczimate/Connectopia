@@ -57,6 +57,7 @@ session_start();
 if(!isset($_SESSION["felhasznalo"])){
     header('Location: login.php');
 } else {
+
     echo '<form action="logout.php" method="post">';
     echo '<input type="submit" value="Kijelentkezés">';
     echo "<input type='button' value='Ismerősők keresése' onclick=\"window.location.href='users.php?kereso='\" />";

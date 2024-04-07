@@ -53,6 +53,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' and !isset($_POST['bejegyzes_id'])) {
 echo "<h1>Profil</h1>
     <form action='" . $_SERVER['PHP_SELF'] . "' method='post'>
         <h2>Szia ". $_SESSION['felhasznalo']."</h2>
+        <h1>Itt módosíthatod az adataidat!</h1>
         <label for='name'>Név:</label>
         <input type='text' id='name' name='name' value='" . $_SESSION["felhasznalo"]."' required><br>
 
