@@ -1,7 +1,7 @@
 <?php
 session_start();
 if (isset($_SESSION["felhasznalo"])) {
-    header('Location: index.php');
+    header('Location: all_table.php');
 }
 ?>
 <html>
@@ -18,6 +18,7 @@ if (!$conn) {
     $e = oci_error();
     trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
 }
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Lekérdezzük a legnagyobb id értéket a felhasználók táblából
     $sql_max_id = "SELECT MAX(felh_id) AS max_id FROM felhasznalo";
@@ -54,10 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         echo "<script>alert('A jelszavak nem egyeznek és/vagy valamelyik mező nincs kitöltve!');</script>";
     }
-
-
 }
-
 ?>
 
 <h1>Regisztráció</h1>
@@ -82,4 +80,3 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </form>
 </body>
 </html>
-

@@ -1,11 +1,12 @@
 <html>
 <head>
-    <link rel=stylesheet type="text/css" href="../CSS/connectopia.css" />
+    <link rel=stylesheet type="text/css" href="../CSS/connectopia.css"/>
 </head>
 <body>
 <?php
 
-function generateTable($tableName, $conn){
+function generateTable($tableName, $conn)
+{
     $tableHTML = '<table>';
 
     //// -- lekerdezzuk a tábla tartalmat
@@ -15,7 +16,7 @@ function generateTable($tableName, $conn){
     //// -- eloszor csak az oszlopneveket kerem le
     $nfields = oci_num_fields($stid);
     $tableHTML .= '<thead><tr>';
-    for ($i = 1; $i<=$nfields; $i++){
+    for ($i = 1; $i <= $nfields; $i++) {
         $field = oci_field_name($stid, $i);
         $tableHTML .= '<th>' . $field . '</th>';
     }
@@ -25,7 +26,7 @@ function generateTable($tableName, $conn){
     oci_execute($stid);
 
     $tableHTML .= '<tbody>';
-    while ( $row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
+    while ($row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
         $tableHTML .= '<tr>';
         foreach ($row as $item) {
             $tableHTML .= '<td>' . $item . '</td>';
@@ -48,12 +49,9 @@ $tns = "
     )
   )";
 
-$conn = oci_connect('C##Y6LP3X', 'Asdyxc123', $tns,'UTF8');
-
+$conn = oci_connect('C##Y6LP3X', 'Asdyxc123', $tns, 'UTF8');
 
 echo '<div class="container">';
-
-
 
 echo '<h2>Az Felhasznalo tábla adatai: </h2>';
 echo generateTable('Felhasznalo', $conn);
@@ -72,8 +70,6 @@ echo generateTable('Fenykep', $conn);
 echo '</div>';
 
 oci_close($conn);
-
-
 ?>
 </body>
 </html>
