@@ -53,6 +53,28 @@ $conn = oci_connect('C##Y6LP3X', 'Asdyxc123', $tns, 'UTF8');
 
 echo '<div class="container">';
 
+session_start();
+if(!isset($_SESSION["felhasznalo"])){
+    header('Location: login.php');
+} else {
+    echo '<form action="logout.php" method="post">';
+    echo '<input type="submit" value="Kijelentkezés">';
+    echo "<input type='button' value='Ismerősők keresése' onclick=\"window.location.href='users.php?kereso='\" />";
+    echo "<input type='button' value='Profil' onclick=\"window.location.href='profile.php'\" />";
+    echo "<input type='button' value='Poszt írása' onclick=\"window.location.href='newpost.php'\" />";
+    echo "<input type='button' value='Feed' onclick=\"window.location.href='feed.php'\" />";
+    echo "<input type='button' value='Barátok' onclick=\"window.location.href='friends.php'\" />";
+    echo "<input type='button' value='Postaláda' onclick=\"window.location.href='postalada.php'\" />";
+    echo "<input type='button' value='Születésnaposok' onclick=\"window.location.href='szulnapok.php'\" />";
+    echo "<input type='button' value='Klubok keresése' onclick=\"window.location.href='clubs.php?kereso='\" />";
+    echo "<input type='button' value='Klub létrehozása' onclick=\"window.location.href='newclub.php'\" />";
+    echo "<input type='button' value='Események keresése' onclick=\"window.location.href='events.php?kereso='\" />";
+    echo "<input type='button' value='Esemény létrehozása' onclick=\"window.location.href='newevent.php'\" />";
+    echo "<input type='button' value='Csoportok' onclick=\"window.location.href='groups.php'\" />";
+    echo "<input type='button' value='Fényképalbumok' onclick=\"window.location.href='galery.php'\" />";
+    echo '</form>';
+}
+
 echo '<h2>Az Felhasznalo tábla adatai: </h2>';
 echo generateTable('Felhasznalo', $conn);
 echo '<br><h2>Az Esemeny tábla adatai: </h2>';

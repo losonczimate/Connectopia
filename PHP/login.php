@@ -39,15 +39,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // tároljuk a felhasználó adatait a sessionben
                 session_start();
                 $_SESSION["loggedin"]=TRUE;
-                $_SESSION["username"] = $row["FELH_NEV"];
-                $_SESSION["id"] = $row["FELH_ID"];
-                $_SESSION["password"] = $row["FELH_JELSZO"];
+                $_SESSION["felhasznalo"] = $row["FELH_NEV"];
+                $_SESSION["felh_id"] = $row["FELH_ID"];
+                $_SESSION["jelszo"] = $row["FELH_JELSZO"];
                 $_SESSION["email"] = $row["FELH_EMAIL"];
                 $_SESSION["messaging_partner_ID"] = NULL;
                 $_SESSION["messaging_partner_email"] = NULL;
                 $_SESSION["messaging_partner_nev"] = NULL;
                 $_SESSION["last_message_recieved_id"] = NULL;
                 $_SESSION["messages"] = NULL;
+                echo "<script>console.log('Sikeres kapcsolat!');</script>";
                 // átirányítás a főoldalra
                 header("Location: profile.php");
 
@@ -67,9 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 ?>
 
-<div class="logincontainer">
+<div>
     <form method="post" action="login.php">
-        <h2 class="login-heading">Bejelentkezés</h2>
+
+        <h2>Bejelentkezés</h2>
         <label for="email">E-mail cím:</label><br>
         <input type="email" id="email" name="email" required><br>
 
