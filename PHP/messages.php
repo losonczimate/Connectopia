@@ -20,7 +20,7 @@ if (!isset($_SESSION["felhasznalo"])) {
     header('Location: login.php');
 } else {
     echo '<form method="post">';
-    echo "<input type='button' value='Főoldal' onclick=\"window.location.href='all_table.php.php'\" />";
+    echo "<input type='button' value='Főoldal' onclick=\"window.location.href='all_table.php'\" />";
     echo '</form>';
 }
 
