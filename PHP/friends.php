@@ -32,10 +32,13 @@ function uzenet($id, $text)
 {
     global $conn;
 
-    $sql_insert_new_id = "BEGIN :id := new_id('uzenet'); END;";
-    $stid_insert_new_id = oci_parse($conn, $sql_insert_new_id);
-    oci_bind_by_name($stid_insert_new_id, ':id', $id_uze);
-    oci_execute($stid_insert_new_id);
+    $sql_max_id_uze = "SELECT MAX(uzenet_id) AS max_id FROM uzenet";
+    $stid_max_id_uze = oci_parse($conn, $sql_max_id_uze);
+    oci_execute($stid_max_id_uze);
+    $max_id_row_uze = oci_fetch_array($stid_max_id_uze, OCI_ASSOC);
+    $max_id_uze = $max_id_row_uze['MAX_ID'];
+
+    $id_uze = $max_id_uze + 1;
 
     $idopont = date('Y-m-d H:i');
 
@@ -83,7 +86,7 @@ function generateTable($tableName, $conn)
         }
         $tableHTML .= "<td><form action='friends.php' method='post' autocomplete='off'>
                            <input type='text' name='uzenet'/>
-                           <input type='hidden' name='friendid' value='$row[felh_id]' />
+                           <input type='hidden' name='friendid' value='$row[felhid2]' />
                            <input type='submit' value='Küldés'/>
                        </form></td>";
         $tableHTML .= '</tr>';

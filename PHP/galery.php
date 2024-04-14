@@ -19,7 +19,7 @@
         header('Location: login.php');
     } else {
         echo '<form method="post">';
-        echo "<input type='button' value='Főoldal' onclick=\"window.location.href='all_table.php.php'\" />";
+        echo "<input type='button' value='Főoldal' onclick=\"window.location.href='all_table.php'\" />";
         echo '</form><br>';
     }
 
@@ -38,13 +38,13 @@
         oci_execute($stid);
         $row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS);
         if ($usename) {
-            $tableHTML = '<table><thead><tr><th colspan="3">' . $row['felhasznalo'] . ' képei</th></tr></thead>';
+            $tableHTML = '<table><thead><tr><th colspan="3">' . $row['FELH_NEV'] . ' képei</th></tr></thead>';
 
         } else {
             $tableHTML = '<table><thead><tr><th colspan="3">Saját fényképek</th></tr></thead>';
         }
 
-        $stid = oci_parse($conn, "SELECT kep_url FROM fenykep, bejegyzes WHERE fenykep.kep_id = bejegyzes.fenykep_id AND bejegyzes.felhid = $felh_id");
+        $stid = oci_parse($conn, "SELECT kep_url FROM fenykep, bejegyzes WHERE fenykep.kep_id = bejegyzes.fenykep_id AND bejegyzes.felhid = '$felh_id'");
         oci_execute($stid);
 
         $i = 1;

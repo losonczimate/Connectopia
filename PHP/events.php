@@ -37,7 +37,7 @@
         echo '</form><br>';
     }
 
-    if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['esemenyid'])) #clubid eventid
+    if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['esemenyid'])) #csoportid eventid
     {
         joinevent($_POST['esemenyid']);
     }
@@ -57,7 +57,7 @@
         $tableHTML = '<table>';
         $searchTerm = isset($_GET['kereso']) ? $_GET['kereso'] : '';
         //// -- lekerdezzuk a tábla tartalmat
-        $stid = oci_parse($conn, "SELECT nev, leiras, idopont, COUNT(felh_id) AS erdeklodok, id FROM esemeny INNER JOIN esemenytagok ON id = esemeny_id WHERE nev LIKE '%$searchTerm%' OR leiras LIKE '%$searchTerm%' GROUP BY id, nev, leiras, idopont");
+        $stid = oci_parse($conn, "SELECT esemeny_id ,nev, leiras, idopont, COUNT(felhid) AS erdeklodok FROM esemeny INNER JOIN esemenytagok ON esemenyid = esemeny_id WHERE nev LIKE '%$searchTerm%' OR leiras LIKE '%$searchTerm%' GROUP BY esemeny_id, nev, leiras, idopont");
         oci_execute($stid);
 
         //// -- eloszor csak az oszlopneveket kerem le
@@ -67,7 +67,7 @@
             $field = oci_field_name($stid, $i);
             $tableHTML .= '<th>' . $field . '</th>';
         }
-        $tableHTML .= '<th>ERDEKEL</th></tr></thead>';
+        $tableHTML .= '<th>ÉRDEKEL</th></tr></thead>';
 
         //// -- ujra vegrehajtom a lekerdezest, es kiiratom a sorokat
         oci_execute($stid);
@@ -79,7 +79,7 @@
                 $tableHTML .= '<td>' . $item . '</td>';
             }
             $tableHTML .= "<td><form id='gomb' action='events.php?kereso=' method='post'>
-                           <input type='submit' name='esemeny_id' value='$row[ID]' />
+                           <input type='submit' name='esemeny_id' value='Ok'/>
                        </form></td>";
             $tableHTML .= '</tr>';
         }

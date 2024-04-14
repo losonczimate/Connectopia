@@ -16,10 +16,13 @@ if (!$conn) {
 
 session_start();
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $sql_insert_new_id = "BEGIN :id := new_id('fenykep'); END;";
-    $stid_insert_new_id = oci_parse($conn, $sql_insert_new_id);
-    oci_bind_by_name($stid_insert_new_id, ':id', $id_kep);
-    oci_execute($stid_insert_new_id);
+    $sql_max_id_kep = "SELECT MAX(kep_id) AS max_id FROM fenykep";
+    $stid_max_id_kep = oci_parse($conn, $sql_max_id_kep);
+    oci_execute($stid_max_id_kep);
+    $max_id_row_kep = oci_fetch_array($stid_max_id_kep, OCI_ASSOC);
+    $max_id_kep = $max_id_row_kep['MAX_ID'];
+
+    $id_kep = $max_id_kep + 1;
     $url = $_POST['url'];
 
     $sql_insert_kep = "INSERT INTO fenykep (kep_id, kep_url) VALUES (:id, :url)";
