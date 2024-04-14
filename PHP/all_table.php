@@ -66,7 +66,7 @@ if(!isset($_SESSION["felhasznalo"])){
     echo "<input type='button' value='Feed' onclick=\"window.location.href='feed.php'\" />";
     echo "<input type='button' value='Barátok' onclick=\"window.location.href='friends.php'\" />";
     echo "<input type='button' value='Postaláda' onclick=\"window.location.href='postalada.php'\" />";
-    echo "<input type='button' value='Születésnaposok' onclick=\"window.location.href='szulnapok.php'\" />";
+    echo "<input type='button' value='Születésnaposok' onclick=\"window.location.href='birthdays.php'\" />";
     echo "<input type='button' value='Csoportok keresése' onclick=\"window.location.href='group.php?kereso='\" />";
     echo "<input type='button' value='Csoport létrehozása' onclick=\"window.location.href='newgroup.php'\" />";
     echo "<input type='button' value='Események keresése' onclick=\"window.location.href='events.php?kereso='\" />";
