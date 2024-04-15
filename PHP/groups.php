@@ -84,7 +84,7 @@
             }
 
             if ($type == 'club') {
-                $tableHTML .= "<td><form id='gomb' action='club.php?id=$row[CSOPORT_ID]' method='post'>";
+                $tableHTML .= "<td><form id='gomb' action='group.php?id=$row[CSOPORT_ID]' method='post'>";
                 $tableHTML .= "<input type='submit' name='clubid' value='$row[CSOPORT_ID]' /></form></td>";
                 $tableHTML .= "<td><form id='gomb' action='groups.php' method='post'>";
                 $tableHTML .= "<input type='submit' name='clubdel' value='$row[CSOPORT_ID]' />";
