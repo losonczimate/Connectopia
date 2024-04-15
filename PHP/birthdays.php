@@ -24,8 +24,7 @@ if (!isset($_SESSION["felhasznalo"])) {
     echo '</form><br>';
 }
 
-$stid = oci_parse($conn, 'SELECT felh_nev, TO_CHAR(felh_szulinap, \'YYYY.MM.DD\') as idopontformatted
-                          FROM felhasznalo');
+$stid = oci_parse($conn, 'SELECT felh_nev, TO_CHAR(felh_szulinap, \'YYYY.MM.DD\') as idopontformatted FROM felhasznalo');
 
 $tableHTML = '<table>';
 $nfields = oci_num_fields($stid);

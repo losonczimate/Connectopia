@@ -57,7 +57,7 @@
         $tableHTML = '<table>';
         $searchTerm = isset($_GET['kereso']) ? $_GET['kereso'] : '';
         //// -- lekerdezzuk a tábla tartalmat
-        $stid = oci_parse($conn, "SELECT csoport_nev, csoport_leiras, COUNT(felhid) AS tagok, csoport_id FROM csoport INNER JOIN csoporttagok ON csoportid = csoport_id WHERE csoport_nev LIKE '%$searchTerm%' OR csoport_leiras LIKE '%$searchTerm%' GROUP BY csoport_id, csoport_nev, csoport_leiras");
+        $stid = oci_parse($conn, "SELECT csoport_nev, csoport_leiras, COUNT(felhid) AS tagok, csoport_id FROM csoport INNER JOIN csoporttagok ON csoport_id = csoportid WHERE csoport_nev LIKE '%$searchTerm%' OR csoport_leiras LIKE '%$searchTerm%' GROUP BY csoport_id, csoport_nev, csoport_leiras");
         oci_execute($stid);
 
         //// -- eloszor csak az oszlopneveket kerem le
@@ -67,7 +67,7 @@
             $field = oci_field_name($stid, $i);
             $tableHTML .= '<th>' . $field . '</th>';
         }
-        $tableHTML .= '<th>CSATLAKOZAS</th></tr></thead>';
+        $tableHTML .= '<th>Csatlakozás</th></tr></thead>';
 
         //// -- ujra vegrehajtom a lekerdezest, es kiiratom a sorokat
         oci_execute($stid);
