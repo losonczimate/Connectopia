@@ -32,7 +32,7 @@ if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['posztid']))
 function kommenteles($id, $text){
     global $conn;
 
-    $sql_max_id_kom = "SELECT MAX(id) AS max_id FROM komment";
+    $sql_max_id_kom = "SELECT MAX(komment_id) AS max_id FROM komment";
     $stid_max_id_kom = oci_parse($conn, $sql_max_id_kom);
     oci_execute($stid_max_id_kom);
     $max_id_row_kom = oci_fetch_array($stid_max_id_kom, OCI_ASSOC);
@@ -99,7 +99,7 @@ foreach ($posts as $row) {
     while ( $row2 = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
         echo '<div class="post">';
         echo '<div class="postfejlec">' . $row2["IDOPONTFORMATTED"] . "  " . $row2["FELH_NEV"] . '</div>';
-        echo '<div class="postleiras">' . $row2["BEJEGYZES_LEIRAS"] . '</div>';
+        echo '<div class="postleiras">' . $row2["SZOVEG"] . '</div>';
         echo '</div>';
     }
 

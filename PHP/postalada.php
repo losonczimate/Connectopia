@@ -25,7 +25,7 @@ if(!isset($_SESSION["felhasznalo"])){
 }
 
 $stid = oci_parse($conn, 'SELECT u.*, f.felh_nev, TO_CHAR(u.kuldes_ideje, \'YYYY.MM.DD HH24:MI\') as idopontformatted
-                          FROM uezent u
+                          FROM uzenet u
                           LEFT JOIN felhasznalo f ON u.kuldo = f.felh_id
                           WHERE u.fogado = :felh_id');
 oci_bind_by_name($stid, ':felh_id', $_SESSION['felhasznalo']['FELH_ID']);

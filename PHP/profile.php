@@ -73,22 +73,20 @@ $stid = oci_parse($conn, 'SELECT b.*, f.kep_url, u.FELH_NEV, f.kep_id as kepid
 oci_bind_by_name($stid, ':felh_id', $_SESSION['felhasznalo']["FELH_ID"]);
 oci_execute($stid);
 
-if (oci_fetch_all($stid, $result) == 0) {
-    echo "<h2>Nincs még bejegyzés!</h2>";
-} else {
-    foreach ($result as $row) {
-        echo '<div class="post">';
-        echo '<div class="postfejlec">' . $row["BEJEGYZES_IDOPONT"] . "  " . $row["FELH_NEV"] . '</div>';
-        echo '<div class="postleiras"> Leírás: ' . $row["BEJEGYZES_LEIRAS"] . '</div>';
-        echo '<div class="kep"><img src = ' . $row["KEP_URL"] . ' ></div>';
+while ( $row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
+    echo '<div class="post">';
+    echo '<div class="postfejlec">' . $row["BEJEGYZES_IDOPONT"] . "  " . $row["FELH_NEV"] . '</div>';
+    echo '<div class="postleiras"> Leírás: ' . $row["BEJEGYZES_LEIRAS"] . '</div>';
+    echo '<div class="kep"><img src = ' . $row["KEP_URL"] . ' ></div>';
 
-        echo "<td><form action='profile.php' method='post'>
-                 <input type='hidden' name='posztid' value='$row[BEJEGYZES_ID]'/>
-                 <input type='submit' value='Törlés' />
-              </form></td>";
+    echo "<td><form action='profile.php' method='post'>
+             <input type='hidden' name='posztid' value='$row[BEJEGYZES_ID]'/>
+             <input type='hidden' name='kepid' value='$row[FENYKEP_ID]'/>
+             <input type='submit' value='Törlés' />
+          </form></td>";
 
-        echo '</div>';
-    }
+    echo '</div>';
 }
+
 echo '<div>';
 ?>
