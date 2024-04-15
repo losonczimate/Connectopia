@@ -37,15 +37,15 @@
         echo '</form><br>';
     }
 
-    if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['esemenyid'])) #csoportid eventid
+    if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['eventid'])) #csoportid eventid
     {
-        joinevent($_POST['esemenyid']);
+        joinevent($_POST['eventid']);
     }
     function joinevent($id){
         global $conn;
         $sql_insert_ism = "INSERT INTO esemenytagok (felhid, esemenyid) VALUES (:felh_id, :esemeny_id)";
         $stid_insert_ism = oci_parse($conn, $sql_insert_ism);
-        oci_bind_by_name($stid_insert_ism, ':felh_id', $_SESSION['felh_id']);
+        oci_bind_by_name($stid_insert_ism, ':felh_id', $_SESSION['felhasznalo']['FELH_ID']);
         oci_bind_by_name($stid_insert_ism, ':esemeny_id', $id);
         if(oci_execute($stid_insert_ism)){
             header('Location: all_table.php');
@@ -57,7 +57,9 @@
         $tableHTML = '<table>';
         $searchTerm = isset($_GET['kereso']) ? $_GET['kereso'] : '';
         //// -- lekerdezzuk a tábla tartalmat
-        $stid = oci_parse($conn, "SELECT esemeny_id ,nev, leiras, idopont, COUNT(felhid) AS erdeklodok FROM esemeny INNER JOIN esemenytagok ON esemenyid = esemeny_id WHERE nev LIKE '%$searchTerm%' OR leiras LIKE '%$searchTerm%' GROUP BY esemeny_id, nev, leiras, idopont");
+        $stid = oci_parse($conn, "SELECT nev, leiras, idopont, COUNT(felhid) AS erdeklodok, esemeny_id FROM esemeny 
+        INNER JOIN esemenytagok ON esemenyid = esemeny_id WHERE nev LIKE '%$searchTerm%' OR leiras 
+        LIKE '%$searchTerm%' GROUP BY esemeny_id, nev, leiras, idopont");
         oci_execute($stid);
 
         //// -- eloszor csak az oszlopneveket kerem le
@@ -79,7 +81,7 @@
                 $tableHTML .= '<td>' . $item . '</td>';
             }
             $tableHTML .= "<td><form id='gomb' action='events.php?kereso=' method='post'>
-                           <input type='submit' name='esemeny_id' value='Ok'/>
+                           <input type='submit' name='eventid' value='$row[ESEMENY_ID]'/>
                        </form></td>";
             $tableHTML .= '</tr>';
         }

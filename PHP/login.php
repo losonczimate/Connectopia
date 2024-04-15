@@ -23,9 +23,9 @@ if (!$conn) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // felhasználó bejelentkeztetése
-    $stmt = oci_parse($conn, "SELECT FELH_ID,FELH_NEV, FELH_EMAIL, FELH_JELSZO FROM Felhasznalo WHERE FELH_EMAIL=:email");
-    $email = $_POST["email"];
+    $stmt = oci_parse($conn, "SELECT * FROM Felhasznalo WHERE FELH_EMAIL=:email");
 
+    $email = $_POST["email"];
     oci_bind_by_name($stmt, ":email", $email);
 
     if (oci_execute($stmt)) {
@@ -38,32 +38,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo "Sikeres bejelentkezés!";
                 // tároljuk a felhasználó adatait a sessionben
                 session_start();
-                $_SESSION["loggedin"]=TRUE;
-                $_SESSION["felhasznalo"] = $row["FELH_NEV"];
-                $_SESSION["felh_id"] = $row["FELH_ID"];
-                $_SESSION["jelszo"] = $row["FELH_JELSZO"];
-                $_SESSION["email"] = $row["FELH_EMAIL"];
-                $_SESSION["messaging_partner_ID"] = NULL;
-                $_SESSION["messaging_partner_email"] = NULL;
-                $_SESSION["messaging_partner_nev"] = NULL;
-                $_SESSION["last_message_recieved_id"] = NULL;
-                $_SESSION["messages"] = NULL;
-                echo "<script>console.log('Sikeres kapcsolat!');</script>";
+                $_SESSION['felhasznalo'] =  $row;
+                echo "<script>alert('Sikeres kapcsolat!');</script>";
                 // átirányítás a főoldalra
                 header("Location: profile.php");
 
                 exit();
             } else {
                 // sikertelen jelszó ellenőrzés
-                echo "Hibás jelszó!";
+                echo "<script>alert('Hibás jelszó!');</script>";
             }
         } else {
             // sikertelen email ellenőrzés
-            echo "Hibás email cím!";
+            echo "<script>alert('Hibás email-cím!');</script>";
         }
     } else {
         // adatbázis hiba
-        echo "Adatbázis hiba!";
+        echo "<script>alert('Adatbázis hiba!');</script>";
     }
 }
 ?>

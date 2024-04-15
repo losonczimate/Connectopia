@@ -25,10 +25,10 @@ if(!isset($_SESSION["felhasznalo"])){
 }
 
 $stid = oci_parse($conn, 'SELECT u.*, f.felh_nev, TO_CHAR(u.kuldes_ideje, \'YYYY.MM.DD HH24:MI\') as idopontformatted
-                          FROM uzenet u
+                          FROM uezent u
                           LEFT JOIN felhasznalo f ON u.kuldo = f.felh_id
                           WHERE u.fogado = :felh_id');
-oci_bind_by_name($stid, ':felh_id', $_SESSION["felh_id"]);
+oci_bind_by_name($stid, ':felh_id', $_SESSION['felhasznalo']['FELH_ID']);
 oci_execute($stid);
 
 $uzenetek = array();
@@ -46,7 +46,7 @@ usort($uzenetek, function($a, $b) {
 
 foreach ($uzenetek as $row) {
     echo '<div class="post">';
-    echo '<div class="postfejlec">' . $row["IDOPONTFORMATTED"] . "  " . $row["NEV"] . '</div>';
+    echo '<div class="postfejlec">' . $row["IDOPONTFORMATTED"] . "  " . $row["FELH_NEV"] . '</div>';
     echo '<div class="postleiras"> Leírás: ' . $row["TARTALOM"] . '</div>';
 
     echo '</div>';

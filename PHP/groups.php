@@ -37,7 +37,7 @@
     }
     function leavegroup($id, $type){
         global $conn;
-        $user = $_SESSION['felh_id'];
+        $user = $_SESSION['felhasznalo']['FELH_ID'];
         if ($type == 'club') {
             $stid = oci_parse($conn, "DELETE FROM csoporttagok WHERE felhid = $user AND csoportid = $id");
         }else{
@@ -52,11 +52,11 @@
         global $conn;
         $tableHTML = '<table>';
         //// -- lekerdezzuk a tábla tartalmat
-        $user = $_SESSION['felh_id'];
+        $user = $_SESSION['felhasznalo']['FELH_ID'];
         if ($type == 'club') {
-            $stid = oci_parse($conn, "SELECT csoport_nev, csoport_leiras, csoport_id FROM csoport INNER JOIN csoporttagok ON csoportid = csoport_id WHERE felhid = $user");
+            $stid = oci_parse($conn, "SELECT csoport_nev as Név, csoport_leiras as Leírás, csoport_id FROM csoport INNER JOIN csoporttagok ON csoportid = csoport_id WHERE felhid = $user");
         }else {
-            $stid = oci_parse($conn, "SELECT nev, leiras, idopont, esemeny_id FROM esemeny INNER JOIN esemenytagok ON esemeny_id = esemeny_id WHERE felhid = $user");
+            $stid = oci_parse($conn, "SELECT nev as Név, leiras as Leírás, idopont as Kezdeti_dátum, esemeny_id FROM esemeny INNER JOIN esemenytagok ON esemenyid = esemeny_id WHERE felhid = $user");
         }
         oci_execute($stid);
 
@@ -68,9 +68,9 @@
             $tableHTML .= '<th>' . $field . '</th>';
         }
         if ($type == 'club') {
-            $tableHTML .= '<th>RESZLETEK</th><th>KILEPES</th></tr></thead>';
+            $tableHTML .= '<th>Részletek</th><th>Kilépés</th></tr></thead>';
         }else {
-            $tableHTML .= '<th>KILEPES</th></tr></thead>';
+            $tableHTML .= '<th>Kilépés</th></tr></thead>';
         }
 
         //// -- ujra vegrehajtom a lekerdezest, es kiiratom a sorokat
@@ -84,14 +84,14 @@
             }
 
             if ($type == 'club') {
-                $tableHTML .= "<td><form id='gomb' action='club.php?id=$row[ID]' method='post'>";
-                $tableHTML .= "<input type='submit' name='clubid' value='$row[ID]' /></form></td>";
+                $tableHTML .= "<td><form id='gomb' action='club.php?id=$row[CSOPORT_ID]' method='post'>";
+                $tableHTML .= "<input type='submit' name='clubid' value='$row[CSOPORT_ID]' /></form></td>";
                 $tableHTML .= "<td><form id='gomb' action='groups.php' method='post'>";
-                $tableHTML .= "<input type='submit' name='clubdel' value='$row[ID]' />";
+                $tableHTML .= "<input type='submit' name='clubdel' value='$row[CSOPORT_ID]' />";
             }else {
                 $tableHTML .= "<td><form id='gomb' action='groups.php' method='post'>";
 
-                $tableHTML .= "<input type='submit' name='eventdel' value='$row[ID]' />";
+                $tableHTML .= "<input type='submit' name='eventdel' value='$row[ESEMENY_ID]' />";
             }
             $tableHTML .= '</form></td></tr>';
         }
@@ -100,9 +100,9 @@
 
         return $tableHTML;
     }
-    echo '<h2>Klubok</h2><br>';
+    echo '<h2>Csoportjaim</h2><br>';
     echo generateTable('club');
-    echo '<h2>Események</h2><br>';
+    echo '<h2>Eseményeim</h2><br>';
     echo generateTable('event');
     ?>
 </div>

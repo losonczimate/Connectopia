@@ -31,13 +31,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     oci_bind_by_name($stid_insert_kep, ':url', $url);
 
     if(oci_execute($stid_insert_kep)){
-        $sql_insert_new_id = "BEGIN :id := new_id('bejegyzes'); END;";
-        $stid_insert_new_id = oci_parse($conn, $sql_insert_new_id);
-        oci_bind_by_name($stid_insert_new_id, ':id', $id_kep);
-        oci_execute($stid_insert_new_id);
-        $leiras = $_POST['bejegyzes_leiras'];
+        $sql_max_id_post = "SELECT MAX(bejegyzes_id) AS max_id FROM bejegyzes";
+        $stid_max_id_post = oci_parse($conn, $sql_max_id_post);
+        oci_execute($stid_max_id_post);
+        $max_id_row_post = oci_fetch_array($stid_max_id_post, OCI_ASSOC);
+        $max_id_post = $max_id_row_post['MAX_ID'];
+
+        $id_kep = $max_id_post + 1;
+        $leiras = $_POST['leiras'];
         $idopont = date('Y-m-d H:i');
-        $klub_id = isset($_SESSION["csoport_id"]) ? $_SESSION["csoport_id"] : null;
+        $csoport_id = isset($_SESSION["csoport_id"]) ? $_SESSION["csoport_id"] : null;
         $esemeny_id = null;
 
         $sql_insert_post = "INSERT INTO bejegyzes (bejegyzes_id, bejegyzes_leiras, bejegyzes_idopont, fenykep_id, felhid, csoportid, esemenyid) VALUES (:bejegyzes_id, :bejegyzes_leiras,TO_DATE(:bejegyzes_idopont, 'YYYY-MM-DD HH24:MI'), :fenykep_id, :felhid, :csoportid, :esemenyid)";
@@ -46,8 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         oci_bind_by_name($stid_insert_post, ':bejegyzes_leiras', $leiras);
         oci_bind_by_name($stid_insert_post, ':bejegyzes_idopont', $idopont);
         oci_bind_by_name($stid_insert_post, ':fenykep_id', $id_kep);
-        oci_bind_by_name($stid_insert_post, ':felhid', $_SESSION['felh_id']);
-        oci_bind_by_name($stid_insert_post, ':csoportid', $klub_id);
+        oci_bind_by_name($stid_insert_post, ':felhid', $_SESSION['felhasznalo']['FELH_ID']);
+        oci_bind_by_name($stid_insert_post, ':csoportid', $csoport_id);
         oci_bind_by_name($stid_insert_post, ':esemenyid', $esemeny_id);
         if(oci_execute($stid_insert_post)){
             echo "Sikeres posztolás!";
@@ -93,7 +96,7 @@ function checkclub($id){
 
         <input type="submit" value="Posztolás">
         <?php
-        if (isset($_GET['clubid'])) {
+        if (isset($_GET['csoport_id'])) {
             echo '<input type="button" value="Vissza" onclick="window.location.href=\'group.php?id='.$_GET['csoport_id'].'\'" />';
         }else{
             echo '<input type="button" value="Főoldal" onclick="window.location.href=\'all_table.php\'" />';

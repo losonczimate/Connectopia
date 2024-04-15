@@ -25,7 +25,7 @@
 
     $sql_insert_ism = "SELECT felh_id2 FROM ismerosok WHERE felh_id1 = :felh_id";
     $stid_insert_ism = oci_parse($conn, $sql_insert_ism);
-    oci_bind_by_name($stid_insert_ism, ':felh_id', $_SESSION['felh_id']);
+    oci_bind_by_name($stid_insert_ism, ':felh_id', $_SESSION['felhasznalo']['FELH_ID']);
     oci_execute($stid_insert_ism);
     $friends = array();
     while ($row = oci_fetch_array($stid_insert_ism, OCI_ASSOC + OCI_RETURN_NULLS)) {
@@ -54,7 +54,7 @@
                 $tableHTML .= '</tr><tr>';
                 $i = 1;
             }
-            $tableHTML .= '<td><img src="' . $row['URL'] . '" alt=""></td>';
+            $tableHTML .= '<td><img src="' . $row['KEP_URL'] . '" alt=""></td>';
             $i++;
         }
         while ($i <= 3) {
@@ -67,7 +67,7 @@
         return $tableHTML;
     }
 
-    echo generateTable($_SESSION['felh_id'], $conn, false);
+    echo generateTable($_SESSION['felhasznalo']['FELH_ID'], $conn, false);
     echo '<h2>Ismerősök képei</h2>';
     foreach ($friends as $f) {
         echo '<br>';

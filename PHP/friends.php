@@ -32,13 +32,11 @@ function uzenet($id, $text)
 {
     global $conn;
 
-    $sql_max_id_uze = "SELECT MAX(uzenet_id) AS max_id FROM uzenet";
-    $stid_max_id_uze = oci_parse($conn, $sql_max_id_uze);
-    oci_execute($stid_max_id_uze);
-    $max_id_row_uze = oci_fetch_array($stid_max_id_uze, OCI_ASSOC);
-    $max_id_uze = $max_id_row_uze['MAX_ID'];
 
-    $id_uze = $max_id_uze + 1;
+    $sql_insert_new_id = "BEGIN :id := new_id('uzenet'); END;";
+    $stid_insert_new_id = oci_parse($conn, $sql_insert_new_id);
+    oci_bind_by_name($stid_insert_new_id, ':id', $id_uze);
+    oci_execute($stid_insert_new_id);
 
     $idopont = date('Y-m-d H:i');
 
@@ -47,7 +45,7 @@ function uzenet($id, $text)
     oci_bind_by_name($stid_insert_uze, ':uzenet_id', $id_uze);
     oci_bind_by_name($stid_insert_uze, ':tartalom', $text);
     oci_bind_by_name($stid_insert_uze, ':kuldes_ideje', $idopont);
-    oci_bind_by_name($stid_insert_uze, ':kuldo', $_SESSION['felh_id']);
+    oci_bind_by_name($stid_insert_uze, ':kuldo', $_SESSION['felhasznalo']['FELH_ID']);
     oci_bind_by_name($stid_insert_uze, ':fogado', $id);
     if (oci_execute($stid_insert_uze)) {
         echo "Sikeres üzenetküldés!";
@@ -62,7 +60,7 @@ function generateTable($tableName, $conn)
     $stid = oci_parse($conn, "SELECT felh_email, felh_szulinap, felh_nev, felh_id FROM $tableName
                                      LEFT JOIN ismerosok i on felh_id = i.felh_id2
                                      WHERE i.felh_id1 = :felh_id");
-    oci_bind_by_name($stid, ':felh_id', $_SESSION["felh_id"]);
+    oci_bind_by_name($stid, ':felh_id', $_SESSION['felhasznalo']['FELH_ID']);
     oci_execute($stid);
 
     //// -- eloszor csak az oszlopneveket kerem le
@@ -86,7 +84,7 @@ function generateTable($tableName, $conn)
         }
         $tableHTML .= "<td><form action='friends.php' method='post' autocomplete='off'>
                            <input type='text' name='uzenet'/>
-                           <input type='hidden' name='friendid' value='$row[felhid2]' />
+                           <input type='hidden' name='friendid' value='$row[FELH_ID]' />
                            <input type='submit' value='Küldés'/>
                        </form></td>";
         $tableHTML .= '</tr>';

@@ -26,7 +26,7 @@ if(!isset($_SESSION["felhasznalo"])){
 
 if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['posztid']))
 {
-    kommenteles($_POST['bejegyzes_id'], $_POST['commentszoveg']);
+    kommenteles($_POST['posztid'], $_POST['commentszoveg']);
 }
 
 function kommenteles($id, $text){
@@ -40,7 +40,7 @@ function kommenteles($id, $text){
     $sql_insert_kom = "INSERT INTO komment (komment_id, kommentelo_id, idopont, szoveg, bejegyzesid) VALUES (:id, :iro_id, TO_DATE(:idopont, 'YYYY-MM-DD HH24:MI'), :szoveg, :bejegyzesid)";
     $stid_insert_kom = oci_parse($conn, $sql_insert_kom);
     oci_bind_by_name($stid_insert_kom, ':id', $id_kom);
-    oci_bind_by_name($stid_insert_kom, ':iro_id', $_SESSION['felh_id']);
+    oci_bind_by_name($stid_insert_kom, ':iro_id', $_SESSION['felhasznalo']['FELH_ID']);
     oci_bind_by_name($stid_insert_kom, ':idopont', $time);
     oci_bind_by_name($stid_insert_kom, ':szoveg', $text);
     oci_bind_by_name($stid_insert_kom, ':bejegyzesid', $id);
@@ -55,7 +55,7 @@ $stid = oci_parse($conn, 'SELECT b.*, f.kep_url, u.felh_nev, TO_CHAR(b.bejegyzes
                           LEFT JOIN fenykep f ON b.fenykep_id = f.kep_id
                           LEFT JOIN felhasznalo u ON i.felh_id2 = u.felh_id
                           WHERE i.felh_id2 != :felh_id AND b.csoportid IS NULL');
-oci_bind_by_name($stid, ':felh_id', $_SESSION["felh_id"]);
+oci_bind_by_name($stid, ':felh_id', $_SESSION['felhasznalo']["FELH_ID"]);
 oci_execute($stid);
 while ( $row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
     array_push($posts, $row);
@@ -66,7 +66,7 @@ $stid = oci_parse($conn, 'SELECT b.*, f.kep_url, u.felh_nev, TO_CHAR(b.bejegyzes
                           LEFT JOIN fenykep f ON b.fenykep_id = f.kep_id
                           LEFT JOIN felhasznalo u ON b.felhid = u.felh_id
                           WHERE b.felhid = :felh_id AND b.csoportid IS NULL');
-oci_bind_by_name($stid, ':felh_id', $_SESSION["felh_id"]);
+oci_bind_by_name($stid, ':felh_id', $_SESSION['felhasznalo']["FELH_ID"]);
 oci_execute($stid);
 
 while ( $row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
@@ -86,24 +86,24 @@ foreach ($posts as $row) {
                           FROM komment k
                           LEFT JOIN felhasznalo u ON k.kommentelo_id = u.felh_id
                           WHERE k.bejegyzesid = :bejegyzesid');
-    oci_bind_by_name($stid, ':poszt_id', $row["BEJEGYZES_ID"]);
+    oci_bind_by_name($stid, ':bejegyzesid', $row["BEJEGYZES_ID"]);
     oci_execute($stid);
 
     echo '<div class="post">';
-    echo '<div class="postfejlec">' . $row["IDOPONTFORMATTED"] . "  " . $row["felhasznalo"] . '</div>';
-    echo '<div class="postleiras"> Leírás: ' . $row["bejegyzes_leiras"] . '</div>';
-    echo '<div class="kep"><img src = ' . $row["kep_url"] . ' ></div>';
+    echo '<div class="postfejlec">' . $row["IDOPONTFORMATTED"] . "  " . $row["FELH_NEV"] . '</div>';
+    echo '<div class="postleiras"> Leírás: ' . $row["BEJEGYZES_LEIRAS"] . '</div>';
+    echo '<div class="kep"><img src = ' . $row["KEP_URL"] . ' ></div>';
 
     while ( $row2 = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
         echo '<div class="post">';
-        echo '<div class="postfejlec">' . $row2["IDOPONTFORMATTED"] . "  " . $row2["NEV"] . '</div>';
-        echo '<div class="postleiras">' . $row2["SZOVEG"] . '</div>';
+        echo '<div class="postfejlec">' . $row2["IDOPONTFORMATTED"] . "  " . $row2["FELH_NEV"] . '</div>';
+        echo '<div class="postleiras">' . $row2["BEJEGYZES_LEIRAS"] . '</div>';
         echo '</div>';
     }
 
     echo "<td><form action='feed.php' method='post' autocomplete='off'>
              <input type='text' name='commentszoveg' required />
-             <input type='hidden' name='posztid' value='$row[bejegyzes_id]'/>
+             <input type='hidden' name='posztid' value='$row[BEJEGYZES_ID]'/>
              <input type='submit' value='Kommentelés' />
           </form></td>";
 

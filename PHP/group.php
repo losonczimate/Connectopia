@@ -37,13 +37,13 @@
         echo '</form><br>';
     }
 
-    if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['csoport_id']))
+    if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['clubid'])) //clubid csoport id
     {
-        joinclub($_POST['csoport_id']);
+        joinclub($_POST['clubid']);
     }
     function joinclub($id){
         global $conn;
-        $sql_insert_ism = "INSERT INTO csoporttagok (felh_id, csoport_id) VALUES (:felhid, :csoport_id)";
+        $sql_insert_ism = "INSERT INTO csoporttagok (felhid, csoportid) VALUES (:felhid, :csoport_id)";
         $stid_insert_ism = oci_parse($conn, $sql_insert_ism);
         oci_bind_by_name($stid_insert_ism, ':felhid', $_SESSION['felhasznalo']['FELH_ID']);
         oci_bind_by_name($stid_insert_ism, ':csoport_id', $id);
@@ -57,7 +57,7 @@
         $tableHTML = '<table>';
         $searchTerm = isset($_GET['kereso']) ? $_GET['kereso'] : '';
         //// -- lekerdezzuk a tábla tartalmat
-        $stid = oci_parse($conn, "SELECT csoport_nev, csoport_leiras, COUNT(felhid) AS tagok, id FROM csoport INNER JOIN csoporttagok ON id = csoport_id WHERE nev LIKE '%$searchTerm%' OR csoport_leiras LIKE '%$searchTerm%' GROUP BY csoport_id, csoport_nev, csoport_leiras");
+        $stid = oci_parse($conn, "SELECT csoport_nev, csoport_leiras, COUNT(felhid) AS tagok, csoport_id FROM csoport INNER JOIN csoporttagok ON csoportid = csoport_id WHERE csoport_nev LIKE '%$searchTerm%' OR csoport_leiras LIKE '%$searchTerm%' GROUP BY csoport_id, csoport_nev, csoport_leiras");
         oci_execute($stid);
 
         //// -- eloszor csak az oszlopneveket kerem le
@@ -79,7 +79,7 @@
                 $tableHTML .= '<td>' . $item . '</td>';
             }
             $tableHTML .= "<td><form id='gomb' action='group.php?kereso=' method='post'>
-                           <input type='submit' name='clubid' value='$row[ID]' />
+                           <input type='submit' name='clubid' value='$row[CSOPORT_ID]' />
                        </form></td>";
             $tableHTML .= '</tr>';
         }

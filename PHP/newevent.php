@@ -44,13 +44,13 @@ if($_SERVER['REQUEST_METHOD'] == "POST") {
     if(oci_execute($stid_insert_user)) {
         $sql_insert_ism = "INSERT INTO esemenytagok (felhid, esemenyid) VALUES (:felh_id, :esemeny_id)";
         $stid_insert_ism = oci_parse($conn, $sql_insert_ism);
-        oci_bind_by_name($stid_insert_ism, ':felh_id', $_SESSION['felh_id']);
+        oci_bind_by_name($stid_insert_ism, ':felh_id', $_SESSION['felhasznalo']['FELH_ID']);
         oci_bind_by_name($stid_insert_ism, ':esemeny_id', $new_id);
         oci_execute($stid_insert_ism);
         header('Location: all_table.php');
         exit;
     }
-    echo "Nem sikerült az eseményt létrehozni";
+    echo  '<script>alert("Nem sikerült az eseményt létrehozni!");</script>';
     exit;
 }
 ?>

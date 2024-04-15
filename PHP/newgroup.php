@@ -25,10 +25,12 @@ if (!isset($_SESSION['felhasznalo'])) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    $sql_insert_new_id = "BEGIN :id := new_id('csoport'); END;";
-    $stid_insert_new_id = oci_parse($conn, $sql_insert_new_id);
-    oci_bind_by_name($stid_insert_new_id, ':id', $new_id);
-    oci_execute($stid_insert_new_id);
+    $sql_max_id = "SELECT MAX(csoport_id) AS max_id FROM csoport";
+    $stid_max_id = oci_parse($conn, $sql_max_id);
+    oci_execute($stid_max_id);
+    $max_id_row = oci_fetch_array($stid_max_id, OCI_ASSOC);
+    $max_id = $max_id_row['MAX_ID'];
+    $new_id = $max_id + 1;
     $name = $_POST['name'];
     $text = $_POST['text'];
 

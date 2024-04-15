@@ -45,7 +45,7 @@
         global $conn;
         $sql_insert_ism = "INSERT INTO ismerosok (felh_id1, felh_id2) VALUES (:felh_id1, :felh_id2)";
         $stid_insert_ism = oci_parse($conn, $sql_insert_ism);
-        oci_bind_by_name($stid_insert_ism, ':felh_id1', $_SESSION['felh_id']);
+        oci_bind_by_name($stid_insert_ism, ':felh_id1', $_SESSION['felhasznalo']['FELH_ID']);
         oci_bind_by_name($stid_insert_ism, ':felh_id2', $id);
         if(oci_execute($stid_insert_ism)){
             header('Location: all_table.php');
