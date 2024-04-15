@@ -32,10 +32,12 @@ if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['posztid']))
 function kommenteles($id, $text){
     global $conn;
 
-    $sql_insert_new_id = "BEGIN :id := new_id('komment'); END;";
-    $stid_insert_new_id = oci_parse($conn, $sql_insert_new_id);
-    oci_bind_by_name($stid_insert_new_id, ':id', $id_kom);
-    oci_execute($stid_insert_new_id);
+    $sql_max_id_kom = "SELECT MAX(id) AS max_id FROM komment";
+    $stid_max_id_kom = oci_parse($conn, $sql_max_id_kom);
+    oci_execute($stid_max_id_kom);
+    $max_id_row_kom = oci_fetch_array($stid_max_id_kom, OCI_ASSOC);
+    $max_id_kom = $max_id_row_kom['MAX_ID'];
+    $id_kom = $max_id_kom + 1;
     $time = date('Y-m-d H:i');
     $sql_insert_kom = "INSERT INTO komment (komment_id, kommentelo_id, idopont, szoveg, bejegyzesid) VALUES (:id, :iro_id, TO_DATE(:idopont, 'YYYY-MM-DD HH24:MI'), :szoveg, :bejegyzesid)";
     $stid_insert_kom = oci_parse($conn, $sql_insert_kom);

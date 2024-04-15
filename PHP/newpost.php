@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $max_id_row_post = oci_fetch_array($stid_max_id_post, OCI_ASSOC);
         $max_id_post = $max_id_row_post['MAX_ID'];
 
-        $id_kep = $max_id_post + 1;
+        $id_post = $max_id_post + 1;
         $leiras = $_POST['leiras'];
         $idopont = date('Y-m-d H:i');
         $csoport_id = isset($_SESSION["csoport_id"]) ? $_SESSION["csoport_id"] : null;
@@ -45,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $sql_insert_post = "INSERT INTO bejegyzes (bejegyzes_id, bejegyzes_leiras, bejegyzes_idopont, fenykep_id, felhid, csoportid, esemenyid) VALUES (:bejegyzes_id, :bejegyzes_leiras,TO_DATE(:bejegyzes_idopont, 'YYYY-MM-DD HH24:MI'), :fenykep_id, :felhid, :csoportid, :esemenyid)";
         $stid_insert_post = oci_parse($conn, $sql_insert_post);
-        oci_bind_by_name($stid_insert_post, ':bejegyzes_id', $id_kep);
+        oci_bind_by_name($stid_insert_post, ':bejegyzes_id', $id_post);
         oci_bind_by_name($stid_insert_post, ':bejegyzes_leiras', $leiras);
         oci_bind_by_name($stid_insert_post, ':bejegyzes_idopont', $idopont);
         oci_bind_by_name($stid_insert_post, ':fenykep_id', $id_kep);
