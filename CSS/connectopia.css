@@ -171,14 +171,14 @@ img {
     margin-top: 20px;
     margin: 20px auto;
     width: 60%;
-    background-color: rgba(52, 51, 52, 0.42);
+    background-color: rgba(52, 51, 52, 0.30);
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 2px 2px 5px #ccc;
 }
 
 .postfejlec {
-    background-color: rgba(52, 51, 52, 0.42);
+    background-color: rgba(52, 51, 52, 0.30);
     padding: 10px;
     font-weight: bold;
     border-bottom: 1px solid #ccc;
