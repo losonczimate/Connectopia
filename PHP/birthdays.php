@@ -40,8 +40,8 @@ $szulinaposok = array();
 
 while ($row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
     $dt1 = DateTime::createFromFormat('Y.m.d', $row['IDOPONTFORMATTED']);
-    $today = date('n');
-    if ($dt1->format('n') == $today) {
+    $today = date('n.d');
+    if ($dt1->format('n.d') == $today) {
         array_push($szulinaposok, $row);
     }
 }
