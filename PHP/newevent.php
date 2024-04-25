@@ -25,12 +25,10 @@ if (!isset($_SESSION['felhasznalo'])) {
 }
 
 if($_SERVER['REQUEST_METHOD'] == "POST") {
-    $sql_max_id = "SELECT MAX(esemeny_id) AS max_id FROM esemeny";
-    $stid_max_id = oci_parse($conn, $sql_max_id);
-    oci_execute($stid_max_id);
-    $max_id_row = oci_fetch_array($stid_max_id, OCI_ASSOC);
-    $max_id = $max_id_row['MAX_ID'];
-    $new_id = $max_id + 1;
+    $sql_insert_new_id = "BEGIN :esemeny_id := new_id('esemeny'); END;";
+    $stid_insert_new_id = oci_parse($conn, $sql_insert_new_id);
+    oci_bind_by_name($stid_insert_new_id, ':esemeny_id', $new_id);
+    oci_execute($stid_insert_new_id);
     $name = $_POST['name'];
     $text = $_POST['text'];
     $date = $_POST['date'];

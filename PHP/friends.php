@@ -23,7 +23,22 @@ if (!isset($_SESSION["felhasznalo"])) {
     echo "<input type='button' value='Főoldal' onclick=\"window.location.href='all_table.php'\" />";
     echo '</form><br>';
 }
+$sql = "SELECT COUNT(*) as baratok_szama
+        FROM (
+            SELECT DISTINCT felh_id2
+            FROM ismerosok
+            WHERE felh_id1 = :felh_id
+        ) ism
+        JOIN felhasznalo ON ism.felh_id2 = felhasznalo.felh_id";
 
+$stid = oci_parse($conn, $sql);
+oci_bind_by_name($stid, ':felh_id', $_SESSION['felhasznalo']['FELH_ID']);
+oci_execute($stid);
+
+$row = oci_fetch_array($stid, OCI_ASSOC);
+echo "<h2>Barátok száma: " . $row['BARATOK_SZAMA'] . "</h2>";
+
+oci_free_statement($stid);
 if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['friendid'])) {
     uzenet($_POST['friendid'], $_POST['uzenet']);
 }

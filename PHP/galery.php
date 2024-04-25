@@ -22,7 +22,20 @@
         echo "<input type='button' value='Főoldal' onclick=\"window.location.href='all_table.php'\" />";
         echo '</form><br>';
     }
+    $sql = "SELECT fenykep.kep_url, COUNT(*) as ossz_kepek
+        FROM fenykep
+        JOIN bejegyzes ON fenykep.kep_id = bejegyzes.fenykep_id
+        WHERE bejegyzes.felhid = :felh_id
+        GROUP BY fenykep.kep_url";
 
+    $stid_counter = oci_parse($conn, $sql);
+    oci_bind_by_name($stid_counter, ':felh_id', $_SESSION['felhasznalo']['FELH_ID']);
+    oci_execute($stid_counter);
+
+    while ($row = oci_fetch_array($stid_counter, OCI_ASSOC + OCI_RETURN_NULLS)) {
+        echo "<h2>Képeim összesen: " . $row['OSSZ_KEPEK'] . " darab<br></h2>";
+    }
+    oci_free_statement($stid_counter);
     $sql_insert_ism = "SELECT felh_id2 FROM ismerosok WHERE felh_id1 = :felh_id";
     $stid_insert_ism = oci_parse($conn, $sql_insert_ism);
     oci_bind_by_name($stid_insert_ism, ':felh_id', $_SESSION['felhasznalo']['FELH_ID']);
@@ -73,7 +86,10 @@
         echo '<br>';
         echo generateTable($f, $conn, true);
     }
+
     ?>
+
+
 </div>
 </body>
 </html>

@@ -28,7 +28,17 @@ if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['posztid']))
 {
     kommenteles($_POST['posztid'], $_POST['commentszoveg']);
 }
+$stid_felh = oci_parse($conn, 'SELECT f.felh_nev, COUNT(b.bejegyzes_id) AS bejegyzesek_szama
+                                FROM felhasznalo f
+                                INNER JOIN ismerosok i ON f.felh_id = i.felh_id2 AND i.felh_id1 = :felh_id
+                                LEFT JOIN bejegyzes b ON f.felh_id = b.felhid
+                                GROUP BY f.felh_id, f.felh_nev');
+oci_bind_by_name($stid_felh, ':felh_id', $_SESSION['felhasznalo']["FELH_ID"]);
+oci_execute($stid_felh);
 
+while ($row_felh = oci_fetch_array($stid_felh, OCI_ASSOC + OCI_RETURN_NULLS)) {
+    echo '<div><h2>Felhasználó neve: ' . $row_felh['FELH_NEV'] . ' - Bejegyzések száma: ' . $row_felh['BEJEGYZESEK_SZAMA'] . '</h2></div>';
+}
 function kommenteles($id, $text){
     global $conn;
 

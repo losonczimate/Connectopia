@@ -36,6 +36,33 @@
         echo "<input type='button' value='Főoldal' onclick=\"window.location.href='all_table.php'\" />";
         echo '</form><br>';
     }
+    // Ismerősök számának lekérdezése felhasználónként
+    $sql_legbaratsagosabb = "SELECT f.felh_id, f.felh_email, f.felh_nev, COUNT(i.felh_id1) AS ismerosok_szama
+                        FROM Felhasznalo f
+                        LEFT JOIN Ismerosok i ON f.felh_id = i.felh_id1
+                        GROUP BY f.felh_id, f.felh_email, f.felh_nev
+                        ORDER BY COUNT(i.felh_id1) DESC
+                        FETCH FIRST 1 ROW ONLY";
+
+    $stid_legbaratsagosabb = oci_parse($conn, $sql_legbaratsagosabb);
+    oci_execute($stid_legbaratsagosabb);
+
+    // Legbarátságosabb felhasználó adatainak kiírása
+    $row_legbaratsagosabb = oci_fetch_array($stid_legbaratsagosabb, OCI_ASSOC);
+    echo "<h2>Legbarátságosabb felhasználó: " . $row_legbaratsagosabb['FELH_NEV'] . " (" . $row_legbaratsagosabb['FELH_EMAIL'] . ") - " . $row_legbaratsagosabb['ISMEROSOK_SZAMA'] . " ismerős</h2>";
+
+    $sql_visszahuzodobb = "SELECT f.felh_id, f.felh_email, f.felh_nev, COUNT(i.felh_id1) AS ismerosok_szama
+                        FROM Felhasznalo f
+                        LEFT JOIN Ismerosok i ON f.felh_id = i.felh_id1
+                        GROUP BY f.felh_id, f.felh_email, f.felh_nev
+                        ORDER BY COUNT(i.felh_id1) ASC
+                        FETCH FIRST 5 ROW ONLY";
+
+    $stid_visszahuzodobb = oci_parse($conn, $sql_visszahuzodobb);
+    oci_execute($stid_visszahuzodobb);
+    $row_visszahuzodobb = oci_fetch_array($stid_visszahuzodobb, OCI_ASSOC);
+    echo "<h2>Legvisszahúzódóbb felhasználók: " . $row_visszahuzodobb['FELH_NEV'] . " (" . $row_visszahuzodobb['FELH_EMAIL'] . ") - " . $row_visszahuzodobb['ISMEROSOK_SZAMA'] . " ismerős</h2>";
+
 
     if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['friendid']))
     {

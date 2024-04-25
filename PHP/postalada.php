@@ -24,6 +24,65 @@ if(!isset($_SESSION["felhasznalo"])){
     echo '</form>';
 }
 
+$felh_id = $_SESSION['felhasznalo']['FELH_ID'];
+
+$sql = "SELECT
+    CASE
+        WHEN ismeros_nev = best_friend_nev THEN ismeros_nev || ' (legjobb barát)'
+        ELSE ismeros_nev
+    END AS ismeros_nev,
+    osszes_uzenet
+FROM (
+    SELECT
+        CASE
+            WHEN uzenetek.kuldo = :felh_id THEN fogado_nev.felh_nev
+            ELSE kuldo_nev.felh_nev
+        END AS ismeros_nev,
+        COUNT(*) AS osszes_uzenet,
+        RANK() OVER (ORDER BY COUNT(*) DESC) AS rang,
+        FIRST_VALUE(CASE
+                       WHEN uzenetek.kuldo = :felh_id THEN fogado_nev.felh_nev
+                       ELSE kuldo_nev.felh_nev
+                   END) OVER (ORDER BY COUNT(*) DESC) AS best_friend_nev
+    FROM
+        Uzenet uzenetek
+    JOIN
+        Felhasznalo kuldo_nev ON uzenetek.kuldo = kuldo_nev.felh_id
+    JOIN
+        Felhasznalo fogado_nev ON uzenetek.fogado = fogado_nev.felh_id
+    WHERE
+        uzenetek.kuldo = :felh_id OR uzenetek.fogado = :felh_id
+    GROUP BY
+        CASE
+            WHEN uzenetek.kuldo = :felh_id THEN fogado_nev.felh_nev
+            ELSE kuldo_nev.felh_nev
+        END
+)
+WHERE
+    rang = 1";
+
+$stid = oci_parse($conn, $sql);
+oci_bind_by_name($stid, ':felh_id', $felh_id);
+oci_execute($stid);
+
+echo "<h2>Legjobb barátod</h2>";
+echo "<table border='1'>
+        <tr>
+            <th>Ismerős neve</th>
+            <th>Üzenetek száma</th>
+        </tr>";
+
+while ($row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
+    echo "<tr>";
+    echo "<td>" . $row['ISMEROS_NEV'] . "</td>";
+    echo "<td>" . $row['OSSZES_UZENET'] . "</td>";
+    echo "</tr>";
+}
+
+echo "</table>";
+
+oci_free_statement($stid);
+
 $stid = oci_parse($conn, 'SELECT u.*, f.felh_nev, TO_CHAR(u.kuldes_ideje, \'YYYY.MM.DD HH24:MI\') as idopontformatted
                           FROM uzenet u
                           LEFT JOIN felhasznalo f ON u.kuldo = f.felh_id
