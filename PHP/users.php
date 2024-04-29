@@ -29,7 +29,7 @@
     if (!isset($_SESSION['felhasznalo'])) {
         header('Location: login.php');
         exit;
-    }else{
+    } else {
         echo '<form action="logout.php" method="post" autocomplete="off">';
         echo '<input type="text" id="kereso" name="kereso" placeholder="Keresés">';
         echo "<input type='button' value='Keres' onclick=keres() />";
@@ -64,23 +64,24 @@
     echo "<h2>Legvisszahúzódóbb felhasználók: " . $row_visszahuzodobb['FELH_NEV'] . " (" . $row_visszahuzodobb['FELH_EMAIL'] . ") - " . $row_visszahuzodobb['ISMEROSOK_SZAMA'] . " ismerős</h2>";
 
 
-    if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['friendid']))
-    {
+    if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['friendid'])) {
         friend($_POST['friendid']);
     }
-    function friend($id){
+    function friend($id)
+    {
         global $conn;
         $sql_insert_ism = "INSERT INTO ismerosok (felh_id1, felh_id2) VALUES (:felh_id1, :felh_id2)";
         $stid_insert_ism = oci_parse($conn, $sql_insert_ism);
         oci_bind_by_name($stid_insert_ism, ':felh_id1', $_SESSION['felhasznalo']['FELH_ID']);
         oci_bind_by_name($stid_insert_ism, ':felh_id2', $id);
-        if(oci_execute($stid_insert_ism)){
+        if (oci_execute($stid_insert_ism)) {
             header('Location: all_table.php');
             exit;
         };
     }
 
-    function generateTable($tableName, $conn){
+    function generateTable($tableName, $conn)
+    {
         $tableHTML = '<table>';
         $searchTerm = isset($_GET['kereso']) ? $_GET['kereso'] : '';
         //// -- lekerdezzuk a tábla tartalmat
@@ -90,7 +91,7 @@
         //// -- eloszor csak az oszlopneveket kerem le
         $nfields = oci_num_fields($stid);
         $tableHTML .= '<thead><tr>';
-        for ($i = 1; $i<=$nfields; $i++){
+        for ($i = 1; $i <= $nfields; $i++) {
             $field = oci_field_name($stid, $i);
             $tableHTML .= '<th>' . $field . '</th>';
         }
@@ -100,7 +101,7 @@
         oci_execute($stid);
 
         $tableHTML .= '<tbody>';
-        while ( $row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
+        while ($row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
             $tableHTML .= '<tr>';
             foreach ($row as $item) {
                 $tableHTML .= '<td>' . $item . '</td>';
@@ -115,8 +116,10 @@
 
         return $tableHTML;
     }
-    if(isset($_GET['kereso'])){
-        echo generateTable('Felhasznalo', $conn);}
+
+    if (isset($_GET['kereso'])) {
+        echo generateTable('Felhasznalo', $conn);
+    }
 
     ?>
 </div>

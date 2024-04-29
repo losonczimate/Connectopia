@@ -47,7 +47,7 @@
         $stid_insert_ism = oci_parse($conn, $sql_insert_ism);
         oci_bind_by_name($stid_insert_ism, ':felhid', $_SESSION['felhasznalo']['FELH_ID']);
         oci_bind_by_name($stid_insert_ism, ':csoport_id', $id);
-        if(oci_execute($stid_insert_ism)){
+        if (oci_execute($stid_insert_ism)) {
             header('Location: all_table.php');
             exit;
         };

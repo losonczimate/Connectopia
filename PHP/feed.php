@@ -1,13 +1,13 @@
 <html>
 <head>
-    <link rel=stylesheet type="text/css" href="../CSS/connectopia.css" />
+    <link rel=stylesheet type="text/css" href="../CSS/connectopia.css"/>
 </head>
 <body>
 <?php
 echo '<div class="container">';
 
 $tns = "(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521))) (CONNECT_DATA = (SID = orania2)))";
-$conn = oci_connect('C##Y6LP3X', 'Asdyxc123', $tns,'UTF8');
+$conn = oci_connect('C##Y6LP3X', 'Asdyxc123', $tns, 'UTF8');
 
 // Ellenőrizzük a kapcsolatot
 if (!$conn) {
@@ -16,16 +16,15 @@ if (!$conn) {
 }
 
 session_start();
-if(!isset($_SESSION["felhasznalo"])){
+if (!isset($_SESSION["felhasznalo"])) {
     header('Location: login.php');
-}else{
+} else {
     echo '<form action="logout.php" method="post">';
     echo "<input type='button' value='Főoldal' onclick=\"window.location.href='all_table.php'\" />";
     echo '</form>';
 }
 
-if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['posztid']))
-{
+if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['posztid'])) {
     kommenteles($_POST['posztid'], $_POST['commentszoveg']);
 }
 $stid_felh = oci_parse($conn, 'SELECT f.felh_nev, COUNT(b.bejegyzes_id) AS bejegyzesek_szama
@@ -39,7 +38,8 @@ oci_execute($stid_felh);
 while ($row_felh = oci_fetch_array($stid_felh, OCI_ASSOC + OCI_RETURN_NULLS)) {
     echo '<div><h2>Felhasználó neve: ' . $row_felh['FELH_NEV'] . ' - Bejegyzések száma: ' . $row_felh['BEJEGYZESEK_SZAMA'] . '</h2></div>';
 }
-function kommenteles($id, $text){
+function kommenteles($id, $text)
+{
     global $conn;
 
     $sql_max_id_kom = "SELECT MAX(komment_id) AS max_id FROM komment";
@@ -69,7 +69,7 @@ $stid = oci_parse($conn, 'SELECT b.*, f.kep_url, u.felh_nev, TO_CHAR(b.bejegyzes
                           WHERE i.felh_id2 != :felh_id AND b.csoportid IS NULL');
 oci_bind_by_name($stid, ':felh_id', $_SESSION['felhasznalo']["FELH_ID"]);
 oci_execute($stid);
-while ( $row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
+while ($row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
     array_push($posts, $row);
 }
 
@@ -81,11 +81,11 @@ $stid = oci_parse($conn, 'SELECT b.*, f.kep_url, u.felh_nev, TO_CHAR(b.bejegyzes
 oci_bind_by_name($stid, ':felh_id', $_SESSION['felhasznalo']["FELH_ID"]);
 oci_execute($stid);
 
-while ( $row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
+while ($row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
     array_push($posts, $row);
 }
 
-usort($posts, function($a, $b) {
+usort($posts, function ($a, $b) {
     $dt1 = DateTime::createFromFormat('Y.m.d H:i', $a['IDOPONTFORMATTED']);
     $dt2 = DateTime::createFromFormat('Y.m.d H:i', $b['IDOPONTFORMATTED']);
 
@@ -106,7 +106,7 @@ foreach ($posts as $row) {
     echo '<div class="postleiras"> Leírás: ' . $row["BEJEGYZES_LEIRAS"] . '</div>';
     echo '<div class="kep"><img src = ' . $row["KEP_URL"] . ' ></div>';
 
-    while ( $row2 = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
+    while ($row2 = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
         echo '<div class="post">';
         echo '<div class="postfejlec">' . $row2["IDOPONTFORMATTED"] . "  " . $row2["FELH_NEV"] . '</div>';
         echo '<div class="postleiras">' . $row2["SZOVEG"] . '</div>';

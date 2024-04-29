@@ -1,6 +1,6 @@
 <?php
-if(!isset($_SESSION["loggedin"])){
-    $_SESSION["loggedin"]=FALSE;
+if (!isset($_SESSION["loggedin"])) {
+    $_SESSION["loggedin"] = FALSE;
 }
 ?>
 <html lang="hu" xmlns="http://www.w3.org/1999/html">
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 echo "Sikeres bejelentkezés!";
                 // tároljuk a felhasználó adatait a sessionben
                 session_start();
-                $_SESSION['felhasznalo'] =  $row;
+                $_SESSION['felhasznalo'] = $row;
                 echo "<script>alert('Sikeres kapcsolat!');</script>";
                 // átirányítás a főoldalra
                 header("Location: profile.php");

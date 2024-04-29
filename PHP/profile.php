@@ -15,7 +15,7 @@ if (!$conn) {
     trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
 }
 session_start();
-if(!isset($_SESSION["felhasznalo"])){
+if (!isset($_SESSION["felhasznalo"])) {
     header('Location: login.php');
 }
 
@@ -50,16 +50,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' and !isset($_POST['posztid'])) {
 
 echo "<h1>Profil</h1>
     <form action='" . $_SERVER['PHP_SELF'] . "' method='post'>
-        <h2>Szia ". $_SESSION["felhasznalo"]["FELH_NEV"]."</h2>
+        <h2>Szia " . $_SESSION["felhasznalo"]["FELH_NEV"] . "</h2>
         <h1>Itt módosíthatod az adataidat!</h1>
         <label for='name'>Név:</label>
-        <input type='text' id='name' name='name' value='" . $_SESSION["felhasznalo"]["FELH_NEV"]."' required><br>
+        <input type='text' id='name' name='name' value='" . $_SESSION["felhasznalo"]["FELH_NEV"] . "' required><br>
 
         <label for='email'>E-mail:</label>
-        <input type='email' id='email' name='email' value='" . $_SESSION["felhasznalo"]["FELH_EMAIL"]. "' required><br>
+        <input type='email' id='email' name='email' value='" . $_SESSION["felhasznalo"]["FELH_EMAIL"] . "' required><br>
 
         <label for='password'>Jelszó:</label>
-        <input type='password' id='password' name='password' value='" . $_SESSION["felhasznalo"]["FELH_JELSZO"]. "' required><br>
+        <input type='password' id='password' name='password' value='" . $_SESSION["felhasznalo"]["FELH_JELSZO"] . "' required><br>
 
         <input type='submit' value='Frissítés'>
         <input type='button' value='Főoldal' onclick=\"window.location.href='all_table.php'\" />
@@ -73,7 +73,7 @@ $stid = oci_parse($conn, 'SELECT b.*, f.kep_url, u.FELH_NEV, f.kep_id as kepid
 oci_bind_by_name($stid, ':felh_id', $_SESSION['felhasznalo']["FELH_ID"]);
 oci_execute($stid);
 
-while ( $row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
+while ($row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
     echo '<div class="post">';
     echo '<div class="postfejlec">' . $row["BEJEGYZES_IDOPONT"] . "  " . $row["FELH_NEV"] . '</div>';
     echo '<div class="postleiras"> Leírás: ' . $row["BEJEGYZES_LEIRAS"] . '</div>';

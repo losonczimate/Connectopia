@@ -29,7 +29,7 @@
     if (!isset($_SESSION['felhasznalo'])) {
         header('Location: login.php');
         exit;
-    }else{
+    } else {
         echo '<form action="logout.php" method="post" autocomplete="off">';
         echo '<input type="text" id="kereso" name="kereso" placeholder="Keresés">';
         echo "<input type='button' value='Keres' onclick=keres() />";
@@ -37,22 +37,25 @@
         echo '</form><br>';
     }
 
-    if($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['eventid'])) #csoportid eventid
+    if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['eventid'])) #csoportid eventid
     {
         joinevent($_POST['eventid']);
     }
-    function joinevent($id){
+    function joinevent($id)
+    {
         global $conn;
         $sql_insert_ism = "INSERT INTO esemenytagok (felhid, esemenyid) VALUES (:felh_id, :esemeny_id)";
         $stid_insert_ism = oci_parse($conn, $sql_insert_ism);
         oci_bind_by_name($stid_insert_ism, ':felh_id', $_SESSION['felhasznalo']['FELH_ID']);
         oci_bind_by_name($stid_insert_ism, ':esemeny_id', $id);
-        if(oci_execute($stid_insert_ism)){
+        if (oci_execute($stid_insert_ism)) {
             header('Location: all_table.php');
             exit;
         };
     }
-    function generateTable(){
+
+    function generateTable()
+    {
         global $conn;
         $tableHTML = '<table>';
         $searchTerm = isset($_GET['kereso']) ? $_GET['kereso'] : '';
@@ -65,7 +68,7 @@
         //// -- eloszor csak az oszlopneveket kerem le
         $nfields = oci_num_fields($stid);
         $tableHTML .= '<thead><tr>';
-        for ($i = 1; $i<=$nfields; $i++){
+        for ($i = 1; $i <= $nfields; $i++) {
             $field = oci_field_name($stid, $i);
             $tableHTML .= '<th>' . $field . '</th>';
         }
@@ -75,7 +78,7 @@
         oci_execute($stid);
 
         $tableHTML .= '<tbody>';
-        while ( $row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
+        while ($row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
             $tableHTML .= '<tr>';
             foreach ($row as $item) {
                 $tableHTML .= '<td>' . $item . '</td>';
@@ -90,7 +93,8 @@
 
         return $tableHTML;
     }
-    if(isset($_GET['kereso'])){
+
+    if (isset($_GET['kereso'])) {
         echo generateTable();
     }
     ?>

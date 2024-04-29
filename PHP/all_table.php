@@ -54,7 +54,7 @@ $conn = oci_connect('C##Y6LP3X', 'Asdyxc123', $tns, 'UTF8');
 echo '<div class="container">';
 
 session_start();
-if(!isset($_SESSION["felhasznalo"])){
+if (!isset($_SESSION["felhasznalo"])) {
     header('Location: login.php');
 } else {
     echo '<form action="logout.php" method="post">';

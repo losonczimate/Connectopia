@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     oci_bind_by_name($stid_insert_kep, ':id', $id_kep);
     oci_bind_by_name($stid_insert_kep, ':url', $url);
 
-    if(oci_execute($stid_insert_kep)){
+    if (oci_execute($stid_insert_kep)) {
         $sql_max_id_post = "SELECT MAX(bejegyzes_id) AS max_id FROM bejegyzes";
         $stid_max_id_post = oci_parse($conn, $sql_max_id_post);
         oci_execute($stid_max_id_post);
@@ -52,30 +52,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         oci_bind_by_name($stid_insert_post, ':felhid', $_SESSION['felhasznalo']['FELH_ID']);
         oci_bind_by_name($stid_insert_post, ':csoportid', $csoport_id);
         oci_bind_by_name($stid_insert_post, ':esemenyid', $esemeny_id);
-        if(oci_execute($stid_insert_post)){
+        if (oci_execute($stid_insert_post)) {
             echo "Sikeres posztolás!";
         }
     }
-    if (isset($_SESSION["csoport_id"])){
-        header('Location: newpost.php?csoport_id='.$_SESSION["csoport_id"]);
+    if (isset($_SESSION["csoport_id"])) {
+        header('Location: newpost.php?csoport_id=' . $_SESSION["csoport_id"]);
         unset($_SESSION["csoport_id"]);
     }
 }
-if(!isset($_SESSION["felhasznalo"])){
+if (!isset($_SESSION["felhasznalo"])) {
     header('Location: login.php');
-}elseif(isset($_GET['csoport_id'])) {
-    if (!checkclub($_GET['csoport_id'])){
+} elseif (isset($_GET['csoport_id'])) {
+    if (!checkclub($_GET['csoport_id'])) {
         header('Location: all_table.php');
         exit;
     }
     $_SESSION["csoport_id"] = $_GET['csoport_id'];
-}elseif (isset($_SESSION["csoport_id"])){
+} elseif (isset($_SESSION["csoport_id"])) {
     unset($_SESSION["csoport_id"]);
 }
-function checkclub($id){
+function checkclub($id)
+{
     global $conn;
     $user = $_SESSION['felh_id'];
-    $stid = oci_parse($conn, "SELECT COUNT(*) AS db FROM csoporttagok WHERE felhid = ".$_GET['csoport_id']." AND felhid = $user");
+    $stid = oci_parse($conn, "SELECT COUNT(*) AS db FROM csoporttagok WHERE felhid = " . $_GET['csoport_id'] . " AND felhid = $user");
     oci_execute($stid);
     while ($row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
         if ($row['DB'] == 0) {
@@ -84,6 +85,7 @@ function checkclub($id){
         return true;
     }
 }
+
 ?>
 <div class="container">
     <h1>Új poszt létrehozása</h1>
@@ -97,8 +99,8 @@ function checkclub($id){
         <input type="submit" value="Posztolás">
         <?php
         if (isset($_GET['csoport_id'])) {
-            echo '<input type="button" value="Vissza" onclick="window.location.href=\'group.php?id='.$_GET['csoport_id'].'\'" />';
-        }else{
+            echo '<input type="button" value="Vissza" onclick="window.location.href=\'group.php?id=' . $_GET['csoport_id'] . '\'" />';
+        } else {
             echo '<input type="button" value="Főoldal" onclick="window.location.href=\'all_table.php\'" />';
         }
         ?>

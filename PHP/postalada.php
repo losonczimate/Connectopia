@@ -1,13 +1,13 @@
 <html>
 <head>
-    <link rel=stylesheet type="text/css" href="../CSS/connectopia.css" />
+    <link rel=stylesheet type="text/css" href="../CSS/connectopia.css"/>
 </head>
 <body>
 <?php
 echo '<div class="container">';
 
 $tns = "(DESCRIPTION = (ADDRESS_LIST = (ADDRESS = (PROTOCOL = TCP)(HOST = localhost)(PORT = 1521))) (CONNECT_DATA = (SID = orania2)))";
-$conn = oci_connect('C##Y6LP3X', 'Asdyxc123', $tns,'UTF8');
+$conn = oci_connect('C##Y6LP3X', 'Asdyxc123', $tns, 'UTF8');
 
 // Ellenőrizzük a kapcsolatot
 if (!$conn) {
@@ -16,9 +16,9 @@ if (!$conn) {
 }
 
 session_start();
-if(!isset($_SESSION["felhasznalo"])){
+if (!isset($_SESSION["felhasznalo"])) {
     header('Location: login.php');
-}else{
+} else {
     echo '<form method="post">';
     echo "<input type='button' value='Főoldal' onclick=\"window.location.href='all_table.php'\" />";
     echo '</form>';
@@ -92,11 +92,11 @@ oci_execute($stid);
 
 $uzenetek = array();
 
-while ( $row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
-    array_push($uzenetek,$row);
+while ($row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
+    array_push($uzenetek, $row);
 }
 
-usort($uzenetek, function($a, $b) {
+usort($uzenetek, function ($a, $b) {
     $dt1 = DateTime::createFromFormat('Y.m.d H:i', $a['IDOPONTFORMATTED']);
     $dt2 = DateTime::createFromFormat('Y.m.d H:i', $b['IDOPONTFORMATTED']);
 
