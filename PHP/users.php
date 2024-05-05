@@ -25,7 +25,7 @@
         trigger_error(htmlentities($e['message'], ENT_QUOTES), E_USER_ERROR);
     }
 
-    // Ha már be van jelentkezve a felhasználó, átirányítjuk a főoldalra
+
     if (!isset($_SESSION['felhasznalo'])) {
         header('Location: login.php');
         exit;
@@ -36,6 +36,45 @@
         echo "<input type='button' value='Főoldal' onclick=\"window.location.href='all_table.php'\" />";
         echo '</form><br>';
     }
+
+    $sql = "SELECT *
+FROM (
+    SELECT 
+        F.felh_nev,
+        COUNT(U.uzenet_id) AS uzenetek_szama,
+        COUNT(DISTINCT U.fogado) AS cimzettek_szama
+    FROM Felhasznalo F
+    JOIN Uzenet U ON F.felh_id = U.kuldo
+    GROUP BY F.felh_nev
+    ORDER BY uzenetek_szama DESC, cimzettek_szama DESC
+)
+WHERE ROWNUM <= 5";
+
+    // Lekérdezés végrehajtása
+    $stid = oci_parse($conn, $sql);
+    oci_execute($stid);
+
+    // Táblázat kezdete
+    echo "<h2>Legaktívabb felhasználók üzenetküldés alapján</h2>";
+    echo "<table border='1'>
+        <tr>
+        <th>Felhasználó</th>
+        <th>Üzenetek száma</th>
+        <th>Címzettek száma</th>
+        </tr>";
+
+    // Adatok kiírása a táblázatba
+    while ($row = oci_fetch_array($stid, OCI_ASSOC + OCI_RETURN_NULLS)) {
+        echo "<tr>";
+        echo "<td>" . $row['FELH_NEV'] . "</td>";
+        echo "<td>" . $row['UZENETEK_SZAMA'] . "</td>";
+        echo "<td>" . $row['CIMZETTEK_SZAMA'] . "</td>";
+        echo "</tr>";
+    }
+
+    // Táblázat vége
+    echo "</table>";
+
     // Ismerősök számának lekérdezése felhasználónként
     $sql_legbaratsagosabb = "SELECT f.felh_id, f.felh_email, f.felh_nev, COUNT(i.felh_id1) AS ismerosok_szama
                         FROM Felhasznalo f
